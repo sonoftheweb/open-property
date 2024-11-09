@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  krakend:
+    image: devopsfaith/krakend:watch
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/gateway/krakend.json:/etc/krakend/krakend.json
+    command: ["run", "-dc", "/etc/krakend/krakend.json"]
+    networks:
+      - op
+    
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    ports:
+      - "80:3000"
+    volumes:
+      - ./frontend:/app
+    command: ["bun", "run", "dev"]
+    networks:
+      - op
+  
+  auth:
+    build:
+      context: ./auth
+      dockerfile: ../docker/auth/Dockerfile
+    volumes:
+      - ./auth:/app
+    ports:
+      - "8081:8081"
+    networks:
+      - op
+
+networks:
+  op:
+    driver: bridge
