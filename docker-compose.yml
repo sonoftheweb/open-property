@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   krakend:
     image: devopsfaith/krakend:watch
@@ -7,11 +5,12 @@ services:
       - "8080:8080"
     volumes:
       - ./docker/gateway/krakend.json:/etc/krakend/krakend.json
-    command: ["run", "-dc", "/etc/krakend/krakend.json"]
+    command: [ "run", "-dc", "/etc/krakend/krakend.json" ]
     networks:
       - op
-    
+
   frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: ../docker/frontend/Dockerfile
@@ -19,11 +18,14 @@ services:
       - "80:3000"
     volumes:
       - ./frontend:/app
-    command: ["bun", "run", "dev"]
+      - /app/node_modules
+    command: [ "bun", "run", "dev" ]
     networks:
       - op
-  
+
   auth:
+    depends_on:
+      - auth_db
     build:
       context: ./auth
       dockerfile: ../docker/auth/Dockerfile
@@ -31,7 +33,7 @@ services:
       - ./auth:/app
       - ./auth/database/migrations:/app/migrations
     ports:
-      - "8081:8081"
+      - "8082:8082"
     networks:
       - op
 

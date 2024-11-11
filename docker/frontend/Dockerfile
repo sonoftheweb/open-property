@@ -10,7 +10,7 @@ ENV PATH="/root/.bun/bin:$PATH"
 WORKDIR /app
 
 # Copy package and lock files
-COPY package.json bun.lockb /app/
+COPY package.json /app/
 
 # Install dependencies
 RUN bun install
@@ -20,6 +20,8 @@ COPY . /app
 
 # Expose the port the app runs on
 EXPOSE 3000
+
+ENV PATH ./node_modules/.bin/:$PATH
 
 # Start the application
 CMD ["bun", "run", "dev"]
