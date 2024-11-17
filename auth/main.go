@@ -23,7 +23,11 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello World!"))
+		w.Header().Set("Content-Type", "application/json")
+    	w.Write([]byte(`{"message": "Hello World!"}`))
 	})
+
+	r.Post("/register", createUserHandler(db))
+
 	http.ListenAndServe(":8082", r)
 }

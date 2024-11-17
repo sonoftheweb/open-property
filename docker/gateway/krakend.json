@@ -3,7 +3,24 @@
   "version": 3,
   "endpoints": [
     {
-      "endpoint": "/v1/auth",
+      "endpoint": "/v1/auth/register",
+      "method": "POST",
+      "output_encoding": "no-op",
+      "backend": [
+        {
+          "encoding": "no-op",
+          "url_pattern": "/register",
+          "sd": "static",
+          "method": "POST",
+          "host": [
+            "http://auth:8082"
+          ],
+          "disable_host_sanitize": false
+        }
+      ]
+    },
+    {
+      "endpoint": "/v1/",
       "method": "GET",
       "output_encoding": "json",
       "backend": [
@@ -12,17 +29,8 @@
           "encoding": "json",
           "sd": "static",
           "method": "GET",
-          "extra_config": {
-            "qos/circuit-breaker": {
-              "interval": 60,
-              "name": "circuit-breaker-1",
-              "timeout": 10,
-              "max_errors": 1,
-              "log_status_change": true
-            }
-          },
           "host": [
-            "http://localhost:8081"
+            "http://auth:8082"
           ],
           "disable_host_sanitize": false
         }
