@@ -3,14 +3,29 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+
 	"open-property.com/auth/database"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	db, err := database.ConnectDB("host=auth_db user=authdb password=password dbname=authdb port=5432 sslmode=disable")
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
+	// Get connection string from environment variable
+	connectionString := os.Getenv("CONNECTION_STRING")
+	if connectionString == "" {
+		log.Fatalf("CONNECTION_STRING environment variable not set")
+	}
+
+	db, err := database.ConnectDB(connectionString)
 	if err != nil {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
@@ -18,13 +33,13 @@ func main() {
 	_ = db
 
 	// Run migrations
-	database.RunMigrations("host=auth_db user=authdb password=password dbname=authdb port=5432 sslmode=disable")
+	database.RunMigrations(connectionString)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-    	w.Write([]byte(`{"message": "Hello World!"}`))
+		w.Write([]byte(`{"message": "Hello World!"}`))
 	})
 
 	r.Post("/register", createUserHandler(db))
