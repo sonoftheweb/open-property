@@ -1,6 +1,6 @@
-module open-property.com/auth
+module open-property.com/landlord
 
-go 1.23.2
+go 1.23.3
 
 require (
 	github.com/go-chi/chi/v5 v5.1.0

@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"os"
 
-	"open-property.com/auth/database"
+	"open-property.com/tenant/database"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -42,7 +42,7 @@ func main() {
 		w.Write([]byte(`{"message": "Hello World!"}`))
 	})
 
-	r.Post("/register", createUserHandler(db))
+	// r.Post("/register", createUserHandler(db))
 
 	http.ListenAndServe(":8082", r)
 }

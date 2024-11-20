@@ -32,12 +32,15 @@ services:
     volumes:
       - ./auth:/app
       - ./auth/database/migrations:/app/migrations
+    environment:
+      - CONNECTION_STRING=${CONNECTION_STRING_AUTH}
     ports:
       - "8082:8082"
     networks:
       - op
 
   auth_db:
+    container_name: auth_db
     image: postgres:latest
     environment:
       POSTGRES_USER: authdb
@@ -46,7 +49,67 @@ services:
     volumes:
       - ./docker/auth/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "5433:5432"
+    networks:
+      - op
+
+  tenant:
+    depends_on:
+      - tenant_db
+    build:
+      context: ./tenant
+      dockerfile: ../docker/tenant/Dockerfile
+    volumes:
+      - ./tenant:/app
+      - ./tenant/database/migrations:/app/migrations
+    environment:
+      - CONNECTION_STRING=${CONNECTION_STRING_TENANT}
+    ports:
+      - "8083:8082"
+    networks:
+      - op
+
+  tenant_db:
+    container_name: tenant_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: tenantdb
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tenantdb
+    volumes:
+      - ./docker/tenant/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5434:5432"
+    networks:
+      - op
+
+  landlord:
+    depends_on:
+      - landlord_db
+    build:
+      context: ./landlord
+      dockerfile: ../docker/landlord/Dockerfile
+    volumes:
+      - ./landlord:/app
+      - ./landlord/database/migrations:/app/migrations
+    environment:
+      - CONNECTION_STRING=${CONNECTION_STRING_LANDLORD}
+    ports:
+      - "8084:8082"
+    networks:
+      - op
+
+  landlord_db:
+    container_name: landlord_db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: landlorddb
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: landlorddb
+    volumes:
+      - ./docker/landlord/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5435:5432"
     networks:
       - op
 

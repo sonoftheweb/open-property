@@ -1,0 +1,4 @@
+.env
+/tenant/migrations/
+/landlord/migrations/
+/auth/migrations/
