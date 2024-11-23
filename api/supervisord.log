@@ -1,6 +1,0 @@
-2024-11-20 03:41:19,444 INFO supervisord started with pid 1
-2024-11-20 03:41:20,447 INFO spawned: 'php-fpm' with pid 7
-2024-11-20 03:41:21,466 INFO success: php-fpm entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
-2024-11-20 03:42:08,689 WARN received SIGQUIT indicating exit request
-2024-11-20 03:42:08,693 INFO waiting for php-fpm to die
-2024-11-20 03:42:09,712 INFO stopped: php-fpm (exit status 0)
